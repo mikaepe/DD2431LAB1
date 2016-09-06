@@ -1,2 +1,2 @@
 # DD2431LAB1
-Lab1
+Machine Learning - Lab 1
