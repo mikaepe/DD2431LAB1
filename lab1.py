@@ -104,6 +104,7 @@ text = '\n1: text based tree\n2: visual tree\nq: quit\n'
 text2 = 'wrong, press q+enter to continue or enter to check trees'
 
 while True:
+    # an attempt to some u/i, so we dont need to see all trees....
     answer = raw_input(text)
     if answer in ['1','2','q']:
         if answer == '1' or answer == '2':
@@ -113,7 +114,6 @@ while True:
                 print buildTree(monkSet[i-1],m.attributes, lev)
             else:
                 drawTree(buildTree(m.monk1,m.attributes,lev))
-
         elif answer == 'q':
             print('continuing script')
             break
@@ -121,17 +121,11 @@ while True:
         print text2
 
 
-
-
-
-
-'''
 for i in range(len(monkSet)):
-    fullTree = buildTree(monkSet[i], m.attributes)      # full tree
+    # fullTree = buildTree(monkSet[i], m.attributes)      # full tree
     limTree = buildTree(monkSet[i], m.attributes, 2)    # only two-level
     # print 'error training set', i+1, ':', round(1-check(limTree, monkSet[i]),4)
     # print 'error test set', i+1, ':', round(1-check(fullTree, monkTestSet[i]),4)
-'''
 
 
 # --- assignment 4 : pruning ---
