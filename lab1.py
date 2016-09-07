@@ -31,7 +31,7 @@ def gainCalc(setList, attributesToIterate):
 # --- assignment 1 : compute entropy ---
 ########################################
 
-print 'press <enter> to continue the script'
+print 'press <enter> to continue the script throughout'
 
 raw_input('compute entropy:')
 ent = []
@@ -53,24 +53,25 @@ for i in range(len(monkGain)):
 ###################################
 
 # --- 3a : build manually ---
-raw_input('press <enter> to compute info to draw tree manually:')
+
+raw_input('compute info to draw tree manually using A5 at root:')
 subli = []                              # create subsets according to A5:
 for val in m.attributes[4].values:
     sub = select(m.monk1, m.attributes[4], val)
     subli.append(sub)
-# update remaining attributes:
-att = tuple(x for x in att if x != m.attributes[4])
+
+att = tuple(x for x in att if x != m.attributes[4]) # rm A5 attribute
 # calcate average gain for each subset and get max:
 monkGain2 = gainCalc(subli, att)        # compute avg.gain for subsets
 maxGain = []; ind = []
 
-raw_input('average gain calculation for each subset:')
 for i in range(len(monkGain2)):
     mg = monkGain2[i]
     print mg
     maxGain.append(max(mg))
     ind.append(mg.index(max(mg)))
 
+raw_input('display max gain at 2nd nodes and attribute:')
 print 'max: ', maxGain
 print 'ind: ', ind
 # remove first node since gain is zero:
