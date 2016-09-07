@@ -3,11 +3,11 @@
 # --- imports and such ---
 ##########################
 
-import numpy
 import monkdata as m
 from dtree import *
 from drawtree import *
-import os, random
+import os, random, numpy
+
 os.system('cls' if os.name == 'nt' else 'clear')    # clear terminal
 
 monkSet = [m.monk1, m.monk2, m.monk3]   # monk sets def. in monkdata.py
@@ -28,6 +28,17 @@ def gainCalc(setList, attributesToIterate):
             setGain.append(avG)
         monkGain.append(setGain)
     return monkGain
+
+
+def partition(data, fraction):
+    ldata = list(data)
+    random.shuffle(ldata)
+    breakPoint = int(len(ldata) * fraction)
+    return ldata[:breakPoint], ldata[breakPoint:]
+
+def cls():
+    os.system('cls' if os.name == 'nt' else 'clear')    # clear terminal
+
 
 
 # --- assignment 1 : compute entropy ---
@@ -97,6 +108,7 @@ for i in range(len(maxGain)):
 print
 
 raw_input('\nNow check the result of builtin functions:')
+cls()
 # --- 3b : build with predefined function ---
 
 
@@ -111,10 +123,11 @@ while True:
             lev = int(raw_input('levels?'))
             monks = int(raw_input('set?'))
             if answer == '1':
-                print buildTree(monkSet[i-1],m.attributes, lev)
+                print buildTree(monkSet[monks-1],m.attributes, lev)
             else:
                 drawTree(buildTree(m.monk1,m.attributes,lev))
         elif answer == 'q':
+            cls()
             print('continuing script')
             break
     else:
@@ -131,11 +144,7 @@ for i in range(len(monkSet)):
 # --- assignment 4 : pruning ---
 ################################
 
-def partition(data, fraction):
-    ldata = list(data)
-    random.shuffle(ldata)
-    breakPoint = int(len(ldata) * fraction)
-    return ldata[:breakPoint], ldata[breakPoint:]
+raw_input('continue with assignment 4, pruning:')
 
 for fraction in [.3, .4, .5, .6, .7, .8]:
     print 'fraction', fraction, ':'
