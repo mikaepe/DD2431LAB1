@@ -15,4 +15,4 @@ print ent
 avG = averageGain(m.monk1,m.attributes[1])
 print avG
 
-
+# hej /Sara
