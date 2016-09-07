@@ -1,32 +1,25 @@
 # lab 1 decision trees, machine learning
 
+# --- imports and such ---
+##########################
+
 import numpy
 import monkdata as m
 from dtree import *
 
-monkSet = [m.monk1, m.monk2, m.monk3]                   # monk sets defined in monkdata.py
-monkTestSet = [m.monk1test, m.monk2test, m.monk3test]   # monk test sets
-att = m.attributes                                      # attributes to consider
+monkSet = [m.monk1, m.monk2, m.monk3]   # monk sets def. in monkdata.py
+monkTestSet = [m.monk1test, m.monk2test, m.monk3test]   # test sets
+att = m.attributes                      # attributes to consider
 
 
-# --- assignment 1 : compute entropy ---
-########################################
-
-ent = []
-for monk in monkSet:
-    ent.append(round(entropy(monk),3))                  # supress some decimals
-print 'entropy: ', ent
-
-
-# --- assignment 2 : average gain ---
-#####################################
+# --- function definitions ---
+##############################
 
 def gainCalc(setList, attributesToIterate):
-    monkGain = []
-    for set in setList:
-        # iterates over monksets
-        setGain = []
 
+    monkGain = []
+    for set in setList:                 # iterates over monksets
+        setGain = []
         for i in range(len(attributesToIterate)):
             # iterates over attributes for each monk
             avG = round(averageGain(set,attributesToIterate[i]),12)
@@ -34,27 +27,44 @@ def gainCalc(setList, attributesToIterate):
         monkGain.append(setGain)
     return monkGain
 
-# calculate average gain for all monk in monkset:
-monkGain = gainCalc(monkSet, att)
-print 'agerage gain calculation for monk1, monk2, monk3:'
+
+# --- assignment 1 : compute entropy ---
+########################################
+
+print 'press <enter> to continue the script'
+
+raw_input('compute entropy:')
+ent = []
+for monk in monkSet:
+    ent.append(round(entropy(monk),4))  # supress some decimals
+print 'entropy: ', ent
+
+
+# --- assignment 2 : average gain ---
+#####################################
+
+raw_input('compute average gain for monk1, monk2, monk3:')
+monkGain = gainCalc(monkSet, att)       # compute for 3 sets in monkSet
 for i in range(len(monkGain)):
     print monkGain[i]
 
 
 # --- assignment 3 : build tree ---
+###################################
 
 # --- 3a : build manually ---
-# create subsets according to A5:
-subli = []
+raw_input('press <enter> to compute info to draw tree manually:')
+subli = []                              # create subsets according to A5:
 for val in m.attributes[4].values:
     sub = select(m.monk1, m.attributes[4], val)
     subli.append(sub)
 # update remaining attributes:
 att = tuple(x for x in att if x != m.attributes[4])
 # calcate average gain for each subset and get max:
-monkGain2 = gainCalc(subli, att)
+monkGain2 = gainCalc(subli, att)        # compute avg.gain for subsets
 maxGain = []; ind = []
-print 'agerage gain calculation for each subset:'
+
+raw_input('average gain calculation for each subset:')
 for i in range(len(monkGain2)):
     mg = monkGain2[i]
     print mg
@@ -77,6 +87,7 @@ for i in range(len(maxGain)):
         sub = select(subli[i], m.attributes[ind[i]], val)
         print mostCommon(sub)
     print ''
+
 
 # --- 3b : build with predefined function ---
 for i in range(len(monkSet)):
