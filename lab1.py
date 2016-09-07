@@ -10,60 +10,65 @@ import os, random, numpy
 
 os.system('cls' if os.name == 'nt' else 'clear')    # clear terminal
 
-monkSet = [m.monk1, m.monk2, m.monk3]   # monk sets def. in monkdata.py
+mSet = [m.monk1, m.monk2, m.monk3]   # monk sets def. in monkdata.py
 monkTestSet = [m.monk1test, m.monk2test, m.monk3test]   # test sets
 att = m.attributes                      # attributes to consider
 
 # --- function definitions ---
 ##############################
 
-def gainCalc(setList, attributesToIterate):
+def gainCalc(setList, attToIter):
+    # computes gain for sets in setlist for the attToIter
 
     monkGain = []
     for set in setList:                 # iterates over monksets
         setGain = []
-        for i in range(len(attributesToIterate)):
-            # iterates over attributes for each monk
-            avG = round(averageGain(set,attributesToIterate[i]),12)
+        for i in range(len(attToIter)): # run for attToIter and each mSet
+            avG = round(averageGain(set,attToIter[i]),6)
             setGain.append(avG)
         monkGain.append(setGain)
     return monkGain
 
 
-def partition(data, fraction):
-    ldata = list(data)
+def part(data, fraction):
+    # partition function as given in description
+
+    ldata = list(data)                  # data => list
     random.shuffle(ldata)
     breakPoint = int(len(ldata) * fraction)
     return ldata[:breakPoint], ldata[breakPoint:]
 
+
 def cls():
+    # clear output promt
+
     os.system('cls' if os.name == 'nt' else 'clear')    # clear terminal
 
 
 
 # --- assignment 1 : compute entropy ---
-########################################
+#########################################
 
 print 'press <enter> to continue the script throughout'
 
 raw_input('compute entropy:')
-ent = []
-for monk in monkSet:
+ent = []                                # list of the entropies
+for monk in mSet:
     ent.append(round(entropy(monk),4))  # supress some decimals
-print 'entropy: ', ent
+print 'entropy: ', ent                  # display entropies
 
 
 # --- assignment 2 : average gain ---
-#####################################
+#########################################
 
 raw_input('compute average gain for monk1, monk2, monk3:')
-monkGain = gainCalc(monkSet, att)       # compute for 3 sets in monkSet
+monkGain = gainCalc(mSet, att)          # compute for 3 sets in mSet
 for i in range(len(monkGain)):
     print monkGain[i]
 
 
 # --- assignment 3 : build tree ---
-###################################
+#########################################
 
 # --- 3a : build manually ---
 
@@ -89,7 +94,7 @@ print 'max gain at 2nd nodes and attribute:'
 print 'max: ', maxGain
 print 'ind: ',                          # display attributes w/ max gain
 for s in indStr:
-    print s,
+    print s,                            # print attributes
 print
 
 maxGain = maxGain[1:]                   # remove 1st node, gain zero (leaf)
@@ -109,6 +114,7 @@ print
 
 raw_input('\nNow check the result of builtin functions:')
 cls()
+
 # --- 3b : build with predefined function ---
 
 
@@ -120,42 +126,40 @@ while True:
     answer = raw_input(text)
     if answer in ['1','2','q']:
         if answer == '1' or answer == '2':
-            lev = int(raw_input('levels?'))
-            monks = int(raw_input('set?'))
-            if answer == '1':
-                print buildTree(monkSet[monks-1],m.attributes, lev)
-            else:
+            lev = int(raw_input('levels?')) # levels of tree to draw
+            monks = int(raw_input('set?'))  # which set to draw
+            if answer == '1':               # call builtin fcts:
+                print buildTree(mSet[monks-1],m.attributes, lev)
+            else:                           # call drawTree:
                 drawTree(buildTree(m.monk1,m.attributes,lev))
         elif answer == 'q':
-            cls()
+            cls()                       # clear screen and cont. script
             print('continuing script')
             break
     else:
-        print text2
+        print text2                     # user error
 
 
-for i in range(len(monkSet)):
-    # fullTree = buildTree(monkSet[i], m.attributes)      # full tree
-    limTree = buildTree(monkSet[i], m.attributes, 2)    # only two-level
-    # print 'error training set', i+1, ':', round(1-check(limTree, monkSet[i]),4)
+for i in range(len(mSet)):
+    # fullTree = buildTree(mSet[i], m.attributes)   # full tree
+    limTree = buildTree(mSet[i], m.attributes, 2)   # only two-level
+    # print 'error training set', i+1, ':', round(1-check(limTree, mSet[i]),4)
     # print 'error test set', i+1, ':', round(1-check(fullTree, monkTestSet[i]),4)
 
 
 # --- assignment 4 : pruning ---
-################################
+#########################################
 
 raw_input('continue with assignment 4, pruning:')
 
 for fraction in [.3, .4, .5, .6, .7, .8]:
-    print 'fraction', fraction, ':'
-    # do for both monk1 and for monk3:
-    for monk in [0,2]:
-        # partition into training and validation set:
-        monkTrain, monkVal = partition(monkSet[monk], fraction)
+    raw_input('fraction '+str(fraction)+' :')
 
-        bestTree = buildTree(monkTrain, m.attributes)  # first pruned tree
-        minErr = round(1-check(bestTree, monkVal),3)   # its error
-        accuracyIncreases = True    # always prune at least once
+    for monk in [0,2]:                  # perform for monk1 & monk2
+        mTrain, mVal = part(mSet[monk], fraction)   # split, training & validation
+        bestTree = buildTree(mTrain, m.attributes)  # first pruned tree
+        minErr = round(1-check(bestTree, mVal),3)   # its error
+        accuracyIncreases = True                    # always prune once
         print 'error, before pruning monk', monk+1, ':', minErr
 
         while accuracyIncreases:
@@ -166,7 +170,7 @@ for fraction in [.3, .4, .5, .6, .7, .8]:
             prevMinErr = minErr
             # prune current tree in all possible ways:
             for prtree in prunedList:
-                err.append(round(1-check(prtree, monkVal),3))
+                err.append(round(1-check(prtree, mVal),3))
                 # find pruned tree will smallest error and choose as best tree so far:
                 minErr = min(err)
                 ind = err.index(minErr)
