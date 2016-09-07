@@ -88,7 +88,7 @@ for i in range(len(monkGain2)):
     #print mg
     maxGain.append(max(mg))
     ind.append(mg.index(max(mg)))
-    
+
 indStr = ['A'+str(x+1+int(x >=4)) for x in ind] # lite hardkodat har ar jag radd..
 print 'max gain at 2nd nodes and attribute:'
 print 'max: ', maxGain
@@ -155,23 +155,21 @@ raw_input('continue with assignment 4, pruning:')
 for fraction in [.3, .4, .5, .6, .7, .8]:
     raw_input('fraction '+str(fraction)+' :')
 
-    for monk in [0,2]:                  # perform for monk1 & monk2
-        mTrain, mVal = part(mSet[monk], fraction)   # split, training & validation
+    for monk in [0,2]:                  # perform for monk1 & monk3
+        mTrain, mVal = part(mSet[monk], fraction)   # split training & validation
         bestTree = buildTree(mTrain, m.attributes)  # first pruned tree
         minErr = round(1-check(bestTree, mVal),3)   # its error
         accuracyIncreases = True                    # always prune once
         print 'error, before pruning monk', monk+1, ':', minErr
 
         while accuracyIncreases:
-            # print 'tree:', tree1
             prunedList = allPruned(bestTree)
-            # print 'pruned tree:', pruned1
-            err = []; ind = []
+            err = []; ind = [];
             prevMinErr = minErr
             # prune current tree in all possible ways:
             for prtree in prunedList:
                 err.append(round(1-check(prtree, mVal),3))
-                # find pruned tree will smallest error and choose as best tree so far:
+                # find pruned tree with smallest error and choose as best tree:
                 minErr = min(err)
                 ind = err.index(minErr)
                 bestTree = prunedList[ind]
@@ -180,5 +178,6 @@ for fraction in [.3, .4, .5, .6, .7, .8]:
 
         print 'error, after pruning monk', monk+1, ':', minErr
 
-# End script lab1.py
+# får ej glömma att plotta err över fraction!
 
+# End script lab1.py
