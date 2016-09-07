@@ -64,25 +64,29 @@ for val in m.attributes[4].values:
 att = tuple(x for x in att if x != m.attributes[4]) # rm A5 attribute
 # calcate average gain for each subset and get max:
 monkGain2 = gainCalc(subli, att)        # compute avg.gain for subsets
-maxGain = []; ind = []
+maxGain = []; ind = []                  # lists to figure splits at 2nd nodes
 
 for i in range(len(monkGain2)):
     mg = monkGain2[i]
     #print mg
     maxGain.append(max(mg))
     ind.append(mg.index(max(mg)))
-
-raw_input('display max gain at 2nd nodes and attribute:')
+    
+indStr = ['A'+str(x+1+int(x >=4)) for x in ind] # lite hardkodat har ar jag radd..
+print 'max gain at 2nd nodes and attribute:'
 print 'max: ', maxGain
-print 'ind: ', ind
+print 'ind: ', 
+for s in indStr:
+    print s,
+print
 
-# remove first node since gain is zero:
-maxGain = maxGain[1:]
+maxGain = maxGain[1:]                   # remove 1st node, gain zero (leaf)
 ind = ind[1:]
 subli = subli[1:]
-# print 'max: ', maxGain
-# print 'ind: ', ind
-
+''' #multiline comment :-)
+print 'max: ', maxGain
+print 'ind: ', ind
+'''
 # determine majority class of second level nodes:
 print 'majority class by second level nodes:'
 for i in range(len(maxGain)):
@@ -136,3 +140,4 @@ for fraction in [.3, .4, .5, .6, .7, .8]:
                 accuracyIncreases = (minErr < prevMinErr)
 
         print 'error, after pruning monk', monk+1, ':', minErr
+
