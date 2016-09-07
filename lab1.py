@@ -4,17 +4,23 @@ import numpy
 import monkdata as m
 from dtree import *
 
-monkSet = [m.monk1, m.monk2, m.monk3]   # monk sets defined in monkdata.py
-monkTestSet = [m.monk1test, m.monk2test, m.monk3test]
-att = m.attributes                      # attributes to consider
+monkSet = [m.monk1, m.monk2, m.monk3]                   # monk sets defined in monkdata.py
+monkTestSet = [m.monk1test, m.monk2test, m.monk3test]   # monk test sets
+att = m.attributes                                      # attributes to consider
 
-# --- assignment 1 : calculate entropy ---
+
+# --- assignment 1 : compute entropy ---
+########################################
+
 ent = []
 for monk in monkSet:
-    ent.append(round(entropy(monk),3))
+    ent.append(round(entropy(monk),3))                  # supress some decimals
 print 'entropy: ', ent
 
+
 # --- assignment 2 : average gain ---
+#####################################
+
 def gainCalc(setList, attributesToIterate):
     monkGain = []
     for set in setList:
