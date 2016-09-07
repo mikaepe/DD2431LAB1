@@ -6,6 +6,7 @@
 import numpy
 import monkdata as m
 from dtree import *
+from drawtree import *
 import os, random
 os.system('cls' if os.name == 'nt' else 'clear')    # clear terminal
 
@@ -62,7 +63,7 @@ for val in m.attributes[4].values:
     subli.append(sub)
 
 att = tuple(x for x in att if x != m.attributes[4]) # rm A5 attribute
-# calcate average gain for each subset and get max:
+
 monkGain2 = gainCalc(subli, att)        # compute avg.gain for subsets
 maxGain = []; ind = []                  # lists to figure splits at 2nd nodes
 
@@ -75,7 +76,7 @@ for i in range(len(monkGain2)):
 indStr = ['A'+str(x+1+int(x >=4)) for x in ind] # lite hardkodat har ar jag radd..
 print 'max gain at 2nd nodes and attribute:'
 print 'max: ', maxGain
-print 'ind: ', 
+print 'ind: ',                          # display attributes w/ max gain
 for s in indStr:
     print s,
 print
@@ -87,23 +88,54 @@ subli = subli[1:]
 print 'max: ', maxGain
 print 'ind: ', ind
 '''
-# determine majority class of second level nodes:
-print 'majority class by second level nodes:'
+
+raw_input('majority class by second level nodes (except leaf):')
 for i in range(len(maxGain)):
     for val in m.attributes[ind[i]].values:
         sub = select(subli[i], m.attributes[ind[i]], val)
-    #     print mostCommon(sub)
-    # print '-'
+    print mostCommon(sub),' ',
+print
 
-
+raw_input('\nNow check the result of builtin functions:')
 # --- 3b : build with predefined function ---
+
+
+text = '\n1: text based tree\n2: visual tree\nq: quit\n'
+text2 = 'wrong, press q+enter to continue or enter to check trees'
+
+while True:
+    answer = raw_input(text)
+    if answer in ['1','2','q']:
+        if answer == '1' or answer == '2':
+            lev = int(raw_input('levels?'))
+            monks = int(raw_input('set?'))
+            if answer == '1':
+                print buildTree(monkSet[i-1],m.attributes, lev)
+            else:
+                drawTree(buildTree(m.monk1,m.attributes,lev))
+
+        elif answer == 'q':
+            print('continuing script')
+            break
+    else:
+        print text2
+
+
+
+
+
+
+'''
 for i in range(len(monkSet)):
-    fullTree = buildTree(monkSet[i], m.attributes)      # enough levels
+    fullTree = buildTree(monkSet[i], m.attributes)      # full tree
     limTree = buildTree(monkSet[i], m.attributes, 2)    # only two-level
     # print 'error training set', i+1, ':', round(1-check(limTree, monkSet[i]),4)
     # print 'error test set', i+1, ':', round(1-check(fullTree, monkTestSet[i]),4)
+'''
+
 
 # --- assignment 4 : pruning ---
+################################
 
 def partition(data, fraction):
     ldata = list(data)
@@ -140,4 +172,6 @@ for fraction in [.3, .4, .5, .6, .7, .8]:
                 accuracyIncreases = (minErr < prevMinErr)
 
         print 'error, after pruning monk', monk+1, ':', minErr
+
+# End script lab1.py
 
