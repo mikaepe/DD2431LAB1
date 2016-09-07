@@ -10,9 +10,18 @@ print ent
 # assignment 1:
 # answer: 1.0, 0.9571, 0.9998
 
+monkGain = []
 
-# testar lite.... :-)
-avG = averageGain(m.monk1,m.attributes[1])
-print avG
+for data in monkset:
+    # iterates over monksets
+    setGain = []
+    for i in range(len(m.attributes)):
+        # iterates over attributes for each monkset
+        avG = round(averageGain(data,m.attributes[i]),4)
+        setGain.append(avG)
+    monkGain.append(setGain)
+
+for i in range(len(monkGain)):
+    print monkGain[i]
 
 # hej /Sara
