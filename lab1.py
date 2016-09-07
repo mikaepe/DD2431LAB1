@@ -1,17 +1,20 @@
 # lab 1 decision trees, machine learning
 
+import numpy
 import monkdata as m
 from dtree import *
 
-monkset = [m.monk1, m.monk2, m.monk3]
-att = m.attributes
+monkSet = [m.monk1, m.monk2, m.monk3]   # monk sets defined in monkdata.py
+monkTestSet = [m.monk1test, m.monk2test, m.monk3test]
+att = m.attributes                      # attributes to consider
 
-ent = [entropy(m.monk1), entropy(m.monk2), entropy(m.monk3)]
-#print ent
-# assignment 1:
-# answer: 1.0, 0.9571, 0.9998
+# --- assignment 1 : calculate entropy ---
+ent = []
+for monk in monkSet:
+    ent.append(round(entropy(monk),3))
+print 'entropy: ', ent
 
-
+# --- assignment 2 : average gain ---
 def gainCalc(setList, attributesToIterate):
     monkGain = []
     for set in setList:
@@ -19,39 +22,59 @@ def gainCalc(setList, attributesToIterate):
         setGain = []
 
         for i in range(len(attributesToIterate)):
-            # iterates over attributes for each monkset
+            # iterates over attributes for each monk
             avG = round(averageGain(set,attributesToIterate[i]),12)
             setGain.append(avG)
         monkGain.append(setGain)
     return monkGain
 
-monkGain = gainCalc(monkset, att)
+# calculate average gain for all monk in monkset:
+monkGain = gainCalc(monkSet, att)
+print 'agerage gain calculation for monk1, monk2, monk3:'
+for i in range(len(monkGain)):
+    print monkGain[i]
 
-# for i in range(len(monkGain)):
-#     print monkGain[i]
 
-subli1 = []
-for aval in m.attributes[4].values:
-    sub = select(m.monk1, m.attributes[4], aval)
-    subli1.append(sub)
+# --- assignment 3 : build tree ---
 
-# update remaining attributes
+# --- 3a : build manually ---
+# create subsets according to A5:
+subli = []
+for val in m.attributes[4].values:
+    sub = select(m.monk1, m.attributes[4], val)
+    subli.append(sub)
+# update remaining attributes:
 att = tuple(x for x in att if x != m.attributes[4])
+# calcate average gain for each subset and get max:
+monkGain2 = gainCalc(subli, att)
+maxGain = []; ind = []
+print 'agerage gain calculation for each subset:'
+for i in range(len(monkGain2)):
+    mg = monkGain2[i]
+    print mg
+    maxGain.append(max(mg))
+    ind.append(mg.index(max(mg)))
 
-monkGain2 = gainCalc(subli1, att)
+print 'max: ', maxGain
+print 'ind: ', ind
+# remove first node since gain is zero:
+maxGain = maxGain[1:]
+ind = ind[1:]
+subli = subli[1:]
+print 'max: ', maxGain
+print 'ind: ', ind
 
-# for i in range(len(monkGain2)):
-#     print monkGain2[i]
+# determine majority class of second level nodes:
+print 'majority class by second level nodes:'
+for i in range(len(maxGain)):
+    for val in m.attributes[ind[i]].values:
+        sub = select(subli[i], m.attributes[ind[i]], val)
+        print mostCommon(sub)
+    print ''
 
-# determine majocity class of second level nodes
-for aval in m.attributes[3].values:
-    sub = select(subli1[1], m.attributes[3], aval)
-    print mostCommon(sub)
-print
-for aval in m.attributes[5].values:
-    sub = select(subli1[2], m.attributes[5], aval)
-    print mostCommon(sub)
-print
-for aval in m.attributes[0].values:
-    sub = select(subli1[3], m.attributes[0], aval)
-    print mostCommon(sub)
+# --- 3b : build with predefined function ---
+for i in range(len(monkSet)):
+    fullTree = buildTree(monkSet[i], m.attributes)
+    limTree = buildTree(monkSet[i], m.attributes,2)
+    print 'error training set', i+1, ':', round(1-check(limTree, monkSet[i]),4)
+    print 'error test set', i+1, ':', round(1-check(fullTree, monkTestSet[i]),4)
