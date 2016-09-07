@@ -18,11 +18,6 @@ def gainCalc(setList, attributesToIterate):
         # iterates over monksets
         setGain = []
 
-        # fix attributes to iterate
-        #attributesToIterate = m.attributes
-        #for att in enumerate(attributesToSkip):
-        #    attributesToIterate = attributesToIterate.remove(att)
-
         for i in range(len(attributesToIterate)):
             # iterates over attributes for each monkset
             avG = round(averageGain(set,attributesToIterate[i]),12)
@@ -35,15 +30,28 @@ monkGain = gainCalc(monkset, att)
 # for i in range(len(monkGain)):
 #     print monkGain[i]
 
-subli = []
+subli1 = []
 for aval in m.attributes[4].values:
     sub = select(m.monk1, m.attributes[4], aval)
-    subli.append(sub)
+    subli1.append(sub)
 
 # update remaining attributes
 att = tuple(x for x in att if x != m.attributes[4])
 
-monkGain2 = gainCalc(subli, att)
+monkGain2 = gainCalc(subli1, att)
 
-for i in range(len(monkGain2)):
-    print monkGain2[i]
+# for i in range(len(monkGain2)):
+#     print monkGain2[i]
+
+# determine majocity class of second level nodes
+for aval in m.attributes[3].values:
+    sub = select(subli1[1], m.attributes[3], aval)
+    print mostCommon(sub)
+print
+for aval in m.attributes[5].values:
+    sub = select(subli1[2], m.attributes[5], aval)
+    print mostCommon(sub)
+print
+for aval in m.attributes[0].values:
+    sub = select(subli1[3], m.attributes[0], aval)
+    print mostCommon(sub)
