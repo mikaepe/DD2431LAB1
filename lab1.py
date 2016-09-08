@@ -5,13 +5,15 @@
 
 import monkdata as m
 from dtree import *
-from drawtree import *
+#from drawtree import *
 import os, random, numpy
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 
 os.system('cls' if os.name == 'nt' else 'clear')    # clear terminal
 
 mSet = [m.monk1, m.monk2, m.monk3]   # monk sets def. in monkdata.py
-monkTestSet = [m.monk1test, m.monk2test, m.monk3test]   # test sets
+mTestSet = [m.monk1test, m.monk2test, m.monk3test]   # test sets
 att = m.attributes                      # attributes to consider
 
 # --- function definitions ---
@@ -46,8 +48,8 @@ def cls():
 
 
 
-# --- assignment 1 : compute entropy ---
-#########################################
+#--- assignment 1 : compute entropy ---
+########################################
 
 print 'press <enter> to continue the script throughout'
 
@@ -127,11 +129,12 @@ while True:
     if answer in ['1','2','q']:
         if answer == '1' or answer == '2':
             lev = int(raw_input('levels?')) # levels of tree to draw
-            monks = int(raw_input('set?'))  # which set to draw
+            monks = int(raw_input('set (1/2/3)?'))  # which set to draw
             if answer == '1':               # call builtin fcts:
                 print buildTree(mSet[monks-1],m.attributes, lev)
             else:                           # call drawTree:
-                drawTree(buildTree(m.monk1,m.attributes,lev))
+                print 'drawing tree'
+                #drawTree(buildTree(m.monk1,m.attributes,lev))
         elif answer == 'q':
             cls()                       # clear screen and cont. script
             print('continuing script')
@@ -144,7 +147,7 @@ for i in range(len(mSet)):
     # fullTree = buildTree(mSet[i], m.attributes)   # full tree
     limTree = buildTree(mSet[i], m.attributes, 2)   # only two-level
     # print 'error training set', i+1, ':', round(1-check(limTree, mSet[i]),4)
-    # print 'error test set', i+1, ':', round(1-check(fullTree, monkTestSet[i]),4)
+    # print 'error test set', i+1, ':', round(1-check(fullTree, mTestSet[i]),4)
 
 
 # --- assignment 4 : pruning ---
@@ -152,15 +155,21 @@ for i in range(len(mSet)):
 
 raw_input('continue with assignment 4, pruning:')
 
-for fraction in [.3, .4, .5, .6, .7, .8]:
-    raw_input('fraction '+str(fraction)+' :')
+finalErrTestList = []           # error list for all fractions
+fractions = [.3, .4, .5, .6, .7, .8]
+for fraction in fractions:
+    raw_input('fraction ' + str(fraction) + ':')
 
-    for monk in [0,2]:                  # perform for monk1 & monk3
-        mTrain, mVal = part(mSet[monk], fraction)   # split training & validation
+    finalErrTestTemp = []       # temp error list for monk1, monk3
+    for monk in [0,2]:          # perform for monk1 & monk3
+
+        mTrain, mVal = part(mSet[monk], fraction)   # split training & validation with respect to fraction ratio
         bestTree = buildTree(mTrain, m.attributes)  # first pruned tree
         minErr = round(1-check(bestTree, mVal),3)   # its error
+        initErrTest = round(1-check(bestTree, mTestSet[monk]),3)
+        print 'test error, before pruning monk', monk+1, ':', initErrTest
+
         accuracyIncreases = True                    # always prune once
-        print 'error, before pruning monk', monk+1, ':', minErr
 
         while accuracyIncreases:
             prunedList = allPruned(bestTree)
@@ -176,8 +185,29 @@ for fraction in [.3, .4, .5, .6, .7, .8]:
                 # condition to stop pruning if accuracy decreases
                 accuracyIncreases = (minErr < prevMinErr)
 
-        print 'error, after pruning monk', monk+1, ':', minErr
+        # calculate and print test error of final pruned tree:
+        finalErrTest = round(1-check(bestTree, mTestSet[monk]),3)
+        finalErrTestTemp.append(finalErrTest)
+        print 'test error, after pruning monk', monk+1, ':', finalErrTest
 
-# får ej glömma att plotta err över fraction!
+    # append list over monk1, monk3 to list over all fractions
+    finalErrTestList.append(finalErrTestTemp)
+
+# print 'test error after pruning for all fractions and for monk1, monk3 respectively: '
+# print finalErrTestList
+
+# plotting test error over fractions:
+testErrMonk1 = [x[0] for x in finalErrTestList] # get test errors for monk1
+testErrMonk3 = [x[1] for x in finalErrTestList] # get test errors for monk3
+
+# matplotlib enables matlab commands for plotting:
+plt.figure(1)
+m1 = plt.plot(fractions, testErrMonk1, 'g', label = 'monk1')
+m2 = plt.plot(fractions, testErrMonk3, 'r', label = 'monk3')
+plt.title('Test errors after pruning with different partitions')
+plt.xlabel('Fraction of training data partition')
+plt.ylabel('Error after pruning')
+plt.legend(['monk1', 'monk3'])
+plt.show()
 
 # End script lab1.py
