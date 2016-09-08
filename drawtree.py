@@ -2,7 +2,7 @@
 
 import dtree
 import sys
-# from PyQt4 import Qt, QtCore, QtGui
+from PyQt4 import Qt, QtCore, QtGui
 
 class MyPainting(QtGui.QWidget):
     def __init__(self, parent, tree):

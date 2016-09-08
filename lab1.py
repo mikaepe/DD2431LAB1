@@ -5,7 +5,7 @@
 
 import monkdata as m
 from dtree import *
-#from drawtree import *
+from drawtree import *
 import os, random, numpy
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
@@ -132,8 +132,8 @@ while True:
             if answer == '1':               # call builtin fcts:
                 print buildTree(mSet[monks-1],m.attributes, lev)
             else:                           # call drawTree:
-                print 'drawing tree'
-                #drawTree(buildTree(m.monk1,m.attributes,lev))
+                #print 'drawing tree'
+                drawTree(buildTree(m.monk1,m.attributes,lev))
         elif answer == 'q':
             cls()                       # clear screen and cont. script
             print('continuing script')
@@ -162,16 +162,22 @@ for fraction in fractions:
     finalErrTestTemp = []       # temp error list for monk1, monk3
     for monk in [0,2]:          # perform for monk1 & monk3
 
-        mTrain, mVal = part(mSet[monk], fraction)   # split training & validation with respect to fraction ratio
+        mTrain, mVal = part(mSet[monk], fraction)   # split training & validation w.r.t fraction ratio
         bestTree = buildTree(mTrain, m.attributes)  # first pruned tree
-        minErr = round(1-check(bestTree, mVal),10)   # its error
+        minErr = round(1-check(bestTree, mVal),10)  # its error
         initErrTest = round(1-check(bestTree, mTestSet[monk]),10)
+        
         print 'test error, before pruning monk', monk+1, ':', initErrTest
+
         accuracyIncreases = True                    # always prune once
 
         while accuracyIncreases:
             prunedList = allPruned(bestTree)    # prune current tree
             err = [];                           # init. err for all pruned trees
+
+            print 'antal trad osv.... blah blah', str(len(prunedList))
+            # TA BORT ^^^^
+
             prevMinErr = minErr                 # init. min error (best tree)
             # iterate over all pruned trees and calculate the error:
             for prtree in prunedList:
