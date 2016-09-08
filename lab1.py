@@ -47,108 +47,107 @@ def cls():
     os.system('cls' if os.name == 'nt' else 'clear')    # clear terminal
 
 
+#--- assignment 1 : compute entropy ---
+########################################
 
-# #--- assignment 1 : compute entropy ---
-# ########################################
-#
-# print 'press <enter> to continue the script throughout'
-#
-# raw_input('compute entropy:')
-# ent = []                                # list of the entropies
-# for monk in mSet:
-#     ent.append(round(entropy(monk),4))  # supress some decimals
-# print 'entropy: ', ent                  # display entropies
-#
-#
-# # --- assignment 2 : average gain ---
-# #########################################
-#
-# raw_input('compute average gain for monk1, monk2, monk3:')
-# monkGain = gainCalc(mSet, att)          # compute for 3 sets in mSet
-# for i in range(len(monkGain)):
-#     print monkGain[i]
-#
-#
-# # --- assignment 3 : build tree ---
-# #########################################
-#
-# # --- 3a : build manually ---
-#
-# raw_input('compute info to draw tree manually using A5 at root:')
-# subli = []                              # create subsets according to A5:
-# for val in m.attributes[4].values:
-#     sub = select(m.monk1, m.attributes[4], val)
-#     subli.append(sub)
-#
-# att = tuple(x for x in att if x != m.attributes[4]) # rm A5 attribute
-#
-# monkGain2 = gainCalc(subli, att)        # compute avg.gain for subsets
-# maxGain = []; ind = []                  # lists to figure splits at 2nd nodes
-#
-# for i in range(len(monkGain2)):
-#     mg = monkGain2[i]
-#     #print mg
-#     maxGain.append(max(mg))
-#     ind.append(mg.index(max(mg)))
-#
-# indStr = ['A'+str(x+1+int(x >=4)) for x in ind] # lite hardkodat har ar jag radd..
-# print 'max gain at 2nd nodes and attribute:'
-# print 'max: ', maxGain
-# print 'ind: ',                          # display attributes w/ max gain
-# for s in indStr:
-#     print s,                            # print attributes
-# print
-#
-# maxGain = maxGain[1:]                   # remove 1st node, gain zero (leaf)
-# ind = ind[1:]
-# subli = subli[1:]
-# ''' #multiline comment :-)
-# print 'max: ', maxGain
-# print 'ind: ', ind
-# '''
-#
-# raw_input('majority class by second level nodes (except leaf):')
-# for i in range(len(maxGain)):
-#     for val in m.attributes[ind[i]].values:
-#         sub = select(subli[i], m.attributes[ind[i]], val)
-#     print mostCommon(sub),' ',
-# print
-#
-# raw_input('\nNow check the result of builtin functions:')
-# cls()
-#
-# # --- 3b : build with predefined function ---
-#
-#
-# text = '\n1: text based tree\n2: visual tree\nq: quit\n'
-# text2 = 'wrong, press q+enter to continue or enter to check trees'
-#
-# while True:
-#     # an attempt to some u/i, so we dont need to see all trees....
-#     answer = raw_input(text)
-#     if answer in ['1','2','q']:
-#         if answer == '1' or answer == '2':
-#             lev = int(raw_input('levels?')) # levels of tree to draw
-#             monks = int(raw_input('set (1/2/3)?'))  # which set to draw
-#             if answer == '1':               # call builtin fcts:
-#                 print buildTree(mSet[monks-1],m.attributes, lev)
-#             else:                           # call drawTree:
-#                 print 'drawing tree'
-#                 #drawTree(buildTree(m.monk1,m.attributes,lev))
-#         elif answer == 'q':
-#             cls()                       # clear screen and cont. script
-#             print('continuing script')
-#             break
-#     else:
-#         print text2                     # user error
-#
-#
-# for i in range(len(mSet)):
-#     # fullTree = buildTree(mSet[i], m.attributes)   # full tree
-#     limTree = buildTree(mSet[i], m.attributes, 2)   # only two-level
-#     # print 'error training set', i+1, ':', round(1-check(limTree, mSet[i]),4)
-#     # print 'error test set', i+1, ':', round(1-check(fullTree, mTestSet[i]),4)
-#
+print 'press <enter> to continue the script throughout'
+
+raw_input('compute entropy:')
+ent = []                                # list of the entropies
+for monk in mSet:
+    ent.append(round(entropy(monk),4))  # supress some decimals
+print 'entropy: ', ent                  # display entropies
+
+
+# --- assignment 2 : average gain ---
+#########################################
+
+raw_input('compute average gain for monk1, monk2, monk3:')
+monkGain = gainCalc(mSet, att)          # compute for 3 sets in mSet
+for i in range(len(monkGain)):
+    print monkGain[i]
+
+
+# --- assignment 3 : build tree ---
+#########################################
+
+# --- 3a : build manually ---
+
+raw_input('compute info to draw tree manually using A5 at root:')
+subli = []                              # create subsets according to A5:
+for val in m.attributes[4].values:
+    sub = select(m.monk1, m.attributes[4], val)
+    subli.append(sub)
+
+att = tuple(x for x in att if x != m.attributes[4]) # rm A5 attribute
+
+monkGain2 = gainCalc(subli, att)        # compute avg.gain for subsets
+maxGain = []; ind = []                  # lists to figure splits at 2nd nodes
+
+for i in range(len(monkGain2)):
+    mg = monkGain2[i]
+    #print mg
+    maxGain.append(max(mg))
+    ind.append(mg.index(max(mg)))
+
+indStr = ['A'+str(x+1+int(x >=4)) for x in ind] # lite hardkodat har ar jag radd..
+print 'max gain at 2nd nodes and attribute:'
+print 'max: ', maxGain
+print 'ind: ',                          # display attributes w/ max gain
+for s in indStr:
+    print s,                            # print attributes
+print
+
+maxGain = maxGain[1:]                   # remove 1st node, gain zero (leaf)
+ind = ind[1:]
+subli = subli[1:]
+''' #multiline comment :-)
+print 'max: ', maxGain
+print 'ind: ', ind
+'''
+
+raw_input('majority class by second level nodes (except leaf):')
+for i in range(len(maxGain)):
+    for val in m.attributes[ind[i]].values:
+        sub = select(subli[i], m.attributes[ind[i]], val)
+    print mostCommon(sub),' ',
+print
+
+raw_input('\nNow check the result of builtin functions:')
+cls()
+
+# --- 3b : build with predefined function ---
+
+
+text = '\n1: text based tree\n2: visual tree\nq: quit\n'
+text2 = 'wrong, press q+enter to continue or enter to check trees'
+
+while True:
+    # an attempt to some u/i, so we dont need to see all trees....
+    answer = raw_input(text)
+    if answer in ['1','2','q']:
+        if answer == '1' or answer == '2':
+            lev = int(raw_input('levels?')) # levels of tree to draw
+            monks = int(raw_input('set (1/2/3)?'))  # which set to draw
+            if answer == '1':               # call builtin fcts:
+                print buildTree(mSet[monks-1],m.attributes, lev)
+            else:                           # call drawTree:
+                print 'drawing tree'
+                #drawTree(buildTree(m.monk1,m.attributes,lev))
+        elif answer == 'q':
+            cls()                       # clear screen and cont. script
+            print('continuing script')
+            break
+    else:
+        print text2                     # user error
+
+
+for i in range(len(mSet)):
+    # fullTree = buildTree(mSet[i], m.attributes)   # full tree
+    limTree = buildTree(mSet[i], m.attributes, 2)   # only two-level
+    # print 'error training set', i+1, ':', round(1-check(limTree, mSet[i]),4)
+    # print 'error test set', i+1, ':', round(1-check(fullTree, mTestSet[i]),4)
+
 
 # --- assignment 4 : pruning ---
 #########################################
@@ -165,8 +164,8 @@ for fraction in fractions:
 
         mTrain, mVal = part(mSet[monk], fraction)   # split training & validation with respect to fraction ratio
         bestTree = buildTree(mTrain, m.attributes)  # first pruned tree
-        minErr = round(1-check(bestTree, mVal),3)   # its error
-        initErrTest = round(1-check(bestTree, mTestSet[monk]),3)
+        minErr = round(1-check(bestTree, mVal),10)   # its error
+        initErrTest = round(1-check(bestTree, mTestSet[monk]),10)
         print 'test error, before pruning monk', monk+1, ':', initErrTest
         accuracyIncreases = True                    # always prune once
 
@@ -176,7 +175,7 @@ for fraction in fractions:
             prevMinErr = minErr                 # init. min error (best tree)
             # iterate over all pruned trees and calculate the error:
             for prtree in prunedList:
-                err.append(round(1-check(prtree, mVal),3))
+                err.append(round(1-check(prtree, mVal),10))
             # find pruned tree with smallest error and choose as best tree:
             minErr = min(err)                   # smallest error
             ind = err.index(minErr)             # its corr. index
@@ -188,7 +187,7 @@ for fraction in fractions:
                 bestTree = prunedList[ind]
 
         # calculate and print test error of final pruned tree:
-        finalErrTest = round(1-check(bestTree, mTestSet[monk]),3)
+        finalErrTest = round(1-check(bestTree, mTestSet[monk]), 10)
         finalErrTestTemp.append(finalErrTest)
         print 'test error, after pruning monk', monk+1, ':', finalErrTest
 
