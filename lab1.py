@@ -212,5 +212,4 @@ plt.ylabel('Error after pruning')
 plt.legend(['monk1', 'monk3'])
 plt.show()
 
-quit()
 # End script lab1.py
